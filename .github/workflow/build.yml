@@ -1,0 +1,56 @@
+name: build
+on:
+  push:
+    branches:
+      - '*'
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - 'master'
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: 'Windows x64'
+            os: windows-2019
+            triplet: x64-windows
+            vcpkg_dir: 'C:\vcpkg'
+            vcpkg_export_dir: 'C:\vcpkg_export'
+            suffix: 'windows-win32'
+            generator: 'Visual Studio 16 2019'
+            arch: '-A x64'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          submodules: true
+
+      - name: Cache vcpkg
+        uses: actions/cache@v3.3.2
+        with:
+          path: '${{ matrix.vcpkg_dir }}/installed'
+          key: vcpkg-${{ matrix.triplet }}-${{ hashFiles('vcpkg.json') }}
+          restore-keys: |
+            vcpkg-${{ matrix.triplet }}-
+
+      - name: Install vcpkg packages
+        shell: bash
+        run: |
+          vcpkg install --triplet ${{ matrix.triplet }}
+          if(Test-Path -Path "${{matrix.vcpkg_export_dir}}") {
+            Remove-Item '${{matrix.vcpkg_export_dir}}' -Recurse
+          }
+
+          New-Item '${{matrix.vcpkg_export_dir}}/installed' -ItemType Directory
+
+          Copy-Item './vcpkg_installed\*' -Destination '${{matrix.vcpkg_export_dir}}/installed' -Recurse
+          Copy-Item '${{ matrix.vcpkg_dir }}/scripts' -Destination '${{matrix.vcpkg_export_dir}}' -Recurse
+          Copy-Item '${{ matrix.vcpkg_dir }}/.vcpkg-root' -Destination '${{matrix.vcpkg_export_dir}}'
+
+          7z.exe a export-$date.7z .\vcpkg-export
