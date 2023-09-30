@@ -43,14 +43,14 @@ jobs:
         shell: bash
         run: |
           vcpkg install --triplet ${{ matrix.triplet }}
-          if(Test-Path -Path "${{matrix.vcpkg_export_dir}}") {
-            Remove-Item '${{matrix.vcpkg_export_dir}}' -Recurse
-          }
 
-          New-Item '${{matrix.vcpkg_export_dir}}/installed' -ItemType Directory
-
-          Copy-Item './vcpkg_installed\*' -Destination '${{matrix.vcpkg_export_dir}}/installed' -Recurse
-          Copy-Item '${{ matrix.vcpkg_dir }}/scripts' -Destination '${{matrix.vcpkg_export_dir}}' -Recurse
-          Copy-Item '${{ matrix.vcpkg_dir }}/.vcpkg-root' -Destination '${{matrix.vcpkg_export_dir}}'
+      - name: Export vcpkg packages
+        shell: bash
+        run: |
+          IF EXIST "${{matrix.vcpkg_export_dir}}" RMDIR /S /Q "${{matrix.vcpkg_export_dir}}"
+          mkdir '${{matrix.vcpkg_export_dir}}/installed'
+          xcopy c:\vcpkg_installed '${{matrix.vcpkg_export_dir}}/installed' /s /e /h
+          xcopy '${{ matrix.vcpkg_dir }}/scripts' '${{matrix.vcpkg_export_dir}}' /s /e /h
+          xcopy '${{ matrix.vcpkg_dir }}/.vcpkg-root' '${{matrix.vcpkg_export_dir}}' /s /e /h
 
           7z.exe a export-$date.7z .\vcpkg-export
