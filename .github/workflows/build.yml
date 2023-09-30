@@ -61,8 +61,8 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v1
         with:
-            name: Release
-            path: release
+            name: packages
+            path: '${{ matrix.vcpkg_dir }}'
         
       - name: Release
         uses: ncipollo/release-action@v1
