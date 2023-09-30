@@ -58,3 +58,8 @@ jobs:
           Copy-Item '${{ matrix.vcpkg_dir }}/.vcpkg-root' -Destination '${{matrix.vcpkg_export_dir}}'
 
           7z.exe a export-$date.7z .\vcpkg-export
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: Release
+          path: release
