@@ -56,10 +56,25 @@ jobs:
           Copy-Item './vcpkg_installed\*' -Destination '${{matrix.vcpkg_export_dir}}/installed' -Recurse
           Copy-Item '${{ matrix.vcpkg_dir }}/scripts' -Destination '${{matrix.vcpkg_export_dir}}' -Recurse
           Copy-Item '${{ matrix.vcpkg_dir }}/.vcpkg-root' -Destination '${{matrix.vcpkg_export_dir}}'
-
-          7z.exe a export-$date.7z .\vcpkg-export
+          7z.exe a export.7z '${{ matrix.vcpkg_dir }}'
+          dir
+      
       - name: Upload artifacts
         uses: actions/upload-artifact@v1
         with:
-          name: Release
-          path: release
+            name: export
+            path: release
+        
+      - name: Release
+        uses: ncipollo/release-action@v1
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          artifacts: ${{ steps.create_artifact.outputs.path }}
+          allowUpdates: true
+          artifactContentType: application/7zip
+          bodyFile: changelog.txt
+          draft: false
+          omitBodyDuringUpdate: true
+          omitNameDuringUpdate: true
+          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
