@@ -47,7 +47,7 @@ jobs:
       - name: Export vcpkg packages
         shell: bash
         run: |
-          IF EXIST "${{matrix.vcpkg_export_dir}}" RMDIR /S /Q "${{matrix.vcpkg_export_dir}}"
+          rd /q /s '${{matrix.vcpkg_export_dir}}'
           mkdir '${{matrix.vcpkg_export_dir}}/installed'
           xcopy c:\vcpkg_installed '${{matrix.vcpkg_export_dir}}/installed' /s /e /h
           xcopy '${{ matrix.vcpkg_dir }}/scripts' '${{matrix.vcpkg_export_dir}}' /s /e /h
