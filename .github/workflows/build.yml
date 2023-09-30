@@ -57,4 +57,3 @@ jobs:
           Copy-Item '${{ matrix.vcpkg_dir }}/scripts' -Destination '${{matrix.vcpkg_export_dir}}' -Recurse
           Copy-Item '${{ matrix.vcpkg_dir }}/.vcpkg-root' -Destination '${{matrix.vcpkg_export_dir}}'
 
-          7z.exe a export.7z .\vcpkg-export
