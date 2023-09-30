@@ -54,3 +54,9 @@ jobs:
           xcopy '${{ matrix.vcpkg_dir }}/.vcpkg-root' '${{matrix.vcpkg_export_dir}}' /s /e /h
 
           7z.exe a export-$date.7z .\vcpkg-export
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v1
+        with:
+            name: Release
+            path: release
