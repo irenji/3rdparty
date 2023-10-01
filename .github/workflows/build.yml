@@ -56,7 +56,7 @@ jobs:
           Copy-Item './vcpkg_installed\*' -Destination '${{matrix.vcpkg_export_dir}}/installed' -Recurse
           Copy-Item '${{ matrix.vcpkg_dir }}/scripts' -Destination '${{matrix.vcpkg_export_dir}}' -Recurse
           Copy-Item '${{ matrix.vcpkg_dir }}/.vcpkg-root' -Destination '${{matrix.vcpkg_export_dir}}'
-          7z.exe a export.7z '${{ matrix.vcpkg_dir }}'
+          7z.exe a export.7z '${{matrix.vcpkg_export_dir}}/installed'
       
       - name: Upload artifacts
         uses: actions/upload-artifact@v1
