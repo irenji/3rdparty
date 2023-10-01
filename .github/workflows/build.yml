@@ -62,7 +62,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
             name: packages
-            path: '${{ matrix.vcpkg_dir }}'
+            path: '${{matrix.vcpkg_export_dir}}/installed'
         
       - name: Release
         uses: ncipollo/release-action@v1
