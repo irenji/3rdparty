@@ -20,7 +20,7 @@ jobs:
           - name: 'Windows x64'
             os: windows-2019
             triplet: x64-windows
-            vcpkg_dir: 'C:\vcpkg'
+            vcpkg_dir: '${{ github.workspace }}/vcpkg'
             vcpkg_export_dir: 'C:\vcpkg_export'
             suffix: 'windows-win32'
             generator: 'Visual Studio 16 2019'
